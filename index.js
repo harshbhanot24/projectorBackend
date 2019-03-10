@@ -9,6 +9,6 @@ app.use('/signUp',signUp);
 app.get('/',(req,res)=>{
     res.json({"message":"hy friends"})
 })
-app.listen(3000,()=>{
+app.listen((process.env.PORT || 5000),()=>{
     console.log('working')
 })
