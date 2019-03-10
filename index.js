@@ -7,7 +7,7 @@ const signUp=require('./routes/signUp')
 app.use('/login',login);
 app.use('/signUp',signUp);
 app.get('/',(req,res)=>{
-    res.send('hy')
+    res.json({"message":"hy friends"})
 })
 app.listen(3000,()=>{
     console.log('working')
