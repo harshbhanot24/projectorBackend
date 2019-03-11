@@ -3,12 +3,13 @@ const express=require('express')
 const cors=require('cors')
 const route=express();
 route.use(cors())
+
 const mongoose=require('../Common/Connection')
 var UserSchema = require('../Common/schemas/userSchema');
 route.use(express.json());
 route.post('/',(req,res)=>{
     const userData=req.body;
-  
+  console.log("inside login",userData)
    var result= FindUser(userData);
    result.then((response)=>{
        if(response.error){
@@ -22,6 +23,7 @@ route.post('/',(req,res)=>{
        }
     
    }).catch((err)=>{
+       console.log(err)
     res.status(500).json(err);
    })
    
@@ -30,16 +32,13 @@ route.post('/',(req,res)=>{
 async function FindUser(userData){
     const userObj=new UserSchema({
         email:userData.email,
-        password:userData.passwords.password
+        password:userData.password
     })
     const checkUser=await UserSchema.findOne({email:userData.email}).select('email password');
-    if(!checkUser.email){
-        
-        return {"error":"email doesnot exist"};
-    }else if(!checkUser.password){
-        return {"error":"password doesnot exist"};
-    }else if(checkUser.password!=userData.passwords.password){
-        return{"error":"Wrong Password"}
+    if(!checkUser){   
+        return {"error":"User doesnot exist"};
+    }else if(checkUser.password!=userData.password){
+        return {"error":"password doesnot match"};
     }
     else{
         return checkUser;
