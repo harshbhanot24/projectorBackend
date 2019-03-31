@@ -6,6 +6,7 @@ route.use(cors())
 
 const mongoose=require('../Common/Connection')
 var UserSchema = require('../Common/schemas/userSchema');
+
 route.use(express.json());
 route.post('/',(req,res)=>{
     const userData=req.body;
@@ -14,17 +15,17 @@ route.post('/',(req,res)=>{
    result.then((response)=>{
        if(response.error){
            console.log(response.error)
-           res.status(404).json(response.error)
+           res.status(404).json({status:404,err:response.error})// standard for error 
            res.end();
        }else{
         console.log(response);
-        res.status(200).json(response);
+        res.status(200).json({status:200,res:response});
         res.end();
        }
     
    }).catch((err)=>{
        console.log(err)
-    res.status(500).json(err);
+    res.status(500).json({status:500,err:err});
    })
    
 })

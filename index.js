@@ -12,9 +12,13 @@ app.use(function (req, res, next) {
 const login=require('./routes/login')
 const signUp=require('./routes/signUp')
 const post=require('./routes/post')
+const table=require('./routes/table')
+const postForm=require('./routes/postForm')
 app.use('/login',login);
 app.use('/signUp',signUp);
 app.use('/posts',post);
+app.use('/table',table);
+app.use('/form',postForm);
 app.get('/',(req,res)=>{
     res.json({"message":"hy friends"})
 })
