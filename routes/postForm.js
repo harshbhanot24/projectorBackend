@@ -14,6 +14,14 @@ route.post('/',function(req,res){
       (res)=>console.log("data in DB is",res)
     )
   })
+  route.get('/',function(req,res){
+    const posts= getPosts().then(
+      (result)=>res.status(200).json({status:200,Data:result})
+    ).catch(
+      (error)=>res.status(400).json({status:400,error:error})
+    )
+      
+  });
   var postSchema = require('../Common/schemas/postSchema');
   async function savePost(userData){
     let tagArray=userData.form.tags;
@@ -34,4 +42,9 @@ route.post('/',function(req,res){
     })
     return postobj.save();
   }
+
+ async function getPosts(){
+   const posts=await postSchema.find();
+   return posts;
+ } 
 module.exports=route;
