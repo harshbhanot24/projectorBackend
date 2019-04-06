@@ -12,15 +12,17 @@ app.use(function (req, res, next) {
 const login=require('./routes/login')
 const signUp=require('./routes/signUp')
 const post=require('./routes/post')
-const table=require('./routes/table')
+const tags=require('./routes/tags')
+const user=require('./routes/user')
 const postForm=require('./routes/postForm')
 app.use('/login',login);
 app.use('/signUp',signUp);
 app.use('/posts',post);
-app.use('/table',table);
+app.use('/tag',tags);
 app.use('/form',postForm);
+app.use('/user',user);
 app.get('/',(req,res)=>{
-    res.json({"message":"hy friends"})
+    res.json({"message":"Currently I am not serving you this sorry try something other I have to offer"})
 })
 app.listen((process.env.PORT || 3000),()=>{
     console.log('working')

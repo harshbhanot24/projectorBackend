@@ -1,5 +1,6 @@
 const express=require('express')
 const cors=require('cors')
+ObjectId = require('mongodb').ObjectID;
 const route=express();
 route.use(express.json());
 route.use(function (req, res, next) {
@@ -10,7 +11,7 @@ route.use(function (req, res, next) {
     next();
   });
 route.post('/',function(req,res){
-    let result=savePost(req.body).then(
+      savePost(req.body).then(
       (res)=>console.log("data in DB is",res)
     )
   })
@@ -27,9 +28,9 @@ route.post('/',function(req,res){
     let tagArray=userData.form.tags;
     let fileID_array=new Array;
     let i=0;
-    for(const [key,value] of Object.entries(userData.uploadFileList)){
-      fileID_array[i]=(value);
-      console.log("type of vlua",typeof(value))
+    for(const [key,value] of Object.entries(userData.uploadFileList)){ 
+      fileID_array[i]=ObjectId(value);
+      console.log("type of vlua",typeof(fileID_array[i]))
       console.log("this should be ",fileID_array)
       i++;
     }
@@ -38,7 +39,7 @@ route.post('/',function(req,res){
       heading:userData.form.heading,
       post:userData.form.details,
       tags:tagArray,
-      filesArrayID:fileID_array
+      files:fileID_array//this is working now
     })
     return postobj.save();
   }

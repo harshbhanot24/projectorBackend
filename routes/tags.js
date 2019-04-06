@@ -1,4 +1,4 @@
-const validate=require('../validators/validate')
+
 const express=require('express')
 const cors=require('cors')
 const route=express();
@@ -8,16 +8,15 @@ route.use(function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
   });
-const mongoose=require('../Common/Connection')
 var UserSchema = require('../Common/schemas/userSchema');
 route.use(express.json());
 route.post('/',(req,res)=>{
-    const userData=req.body;
+    const tags=req.body;
   
-   var result= CreateUser(userData);
+   var result= CreateTag(tags);
    result.then((response)=>{
        if(response==null){
-           res.status(404).json({'err':'username exists'})
+           res.status(404).json({'err':'Tag already exists'})
            res.end();
        }else{
         console.log(response);
@@ -30,16 +29,19 @@ route.post('/',(req,res)=>{
    })
    
 })
+route.get('/:id',(req,res)=>{
+    
+})
 
-async function CreateUser(userData){
-    const userObj=new UserSchema({
-        email:userData.email,
-        password:userData.passwords.password,
-        College:'jngec'
+
+
+async function CreateTag(tag){
+    const tagObj=new tagSchema({
+        Name:tag.name    
     })
-    const checkUser=await UserSchema.findOne({email:userData.email}).select('_id');
-    if(!checkUser){
-        const result=await userObj.save();
+    const CheckTag=await UserSchema.findOne({email:tag.name}).select('_id');
+    if(!CheckTag){
+        const result=await tagObj.save();
         return result;
     }else{
         return null;

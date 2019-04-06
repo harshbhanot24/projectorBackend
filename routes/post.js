@@ -1,4 +1,4 @@
-
+//this is used to add a single file upload to the
 const express=require('express')
 const cors=require('cors')
 const route=express();
@@ -31,10 +31,10 @@ route.post('/',function(req,res,next){
     if(err){
       return res.status(501).json({error:err})
     }
-    let Result=SaveFile(req).then((resultSet)=>{
+   SaveFile(req).then((resultSet)=>{
      
       id=resultSet._id;
-      return res.status(200).json({fileID:id});
+      return res.status(200).json({id});
     }).catch(
       (err)=>{
         console.log(err)
