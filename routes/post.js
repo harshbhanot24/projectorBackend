@@ -33,8 +33,7 @@ route.post('/',function(req,res,next){
     }
    SaveFile(req).then((resultSet)=>{
      
-      id=resultSet._id;
-      return res.status(200).json({id});
+      return res.status(200).json({resultSet});
     }).catch(
       (err)=>{
         console.log(err)
@@ -59,5 +58,6 @@ async function SaveFile(req){
   Path:req.file.path
   })
  const result=await fileData.save();
+ 
  return result;
   }

@@ -1,11 +1,11 @@
 var mongoose = require('mongoose');
-var fileSchema=require('./fileSchema')
+var fileSchema=require('./fileSchema').schema;
 const postSchema=new mongoose.Schema({
     heading:{type:String,required:true},
     post:{type:String,required:true},
     tags:{type:Array},
-    files:[{type:mongoose.Schema.Types.ObjectId,
-    ref:'file'}],
+    files:[{type:fileSchema,
+      ref:'file'}],
     DateCreated:{type:Date,default:Date.now},
     Active:{type:Boolean,default:true},
     Views:{type:Number},
@@ -13,6 +13,5 @@ const postSchema=new mongoose.Schema({
     Dislikes:{type:Number}
     //SubmissionID:{[array/subdoc have to see]}
 }); 
-
 
 module.exports=mongoose.model('Post',postSchema);

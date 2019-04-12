@@ -8,5 +8,5 @@ const fileSchema=new mongoose.Schema({
    
 }); 
 
-
+module.exports.schema=fileSchema;
 module.exports=mongoose.model('file',fileSchema);
