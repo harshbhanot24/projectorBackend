@@ -8,7 +8,7 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
   });
-
+  app.use(express.static(__dirname+'/dist/projectAppLogin'))
 const login=require('./routes/login')
 const signUp=require('./routes/signUp')
 const post=require('./routes/post')
