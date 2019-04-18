@@ -1,1 +1,1 @@
-web: node index.jsher
+web: node index.js
