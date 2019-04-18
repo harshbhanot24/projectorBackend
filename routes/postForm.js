@@ -1,19 +1,14 @@
 const express=require('express')
-const cors=require('cors')
+const auth=require('../auth/auth')
+
 ObjectId = require('mongodb').ObjectID;
 const route=express();
 route.use(express.json());
-route.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
-    res.setHeader('Access-Control-Allow-Methods', 'POST');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    next();
-  });
+
   var postSchema =require('../Common/schemas/postSchema'); 
   var fileSchema=require('../Common/schemas/fileSchema')
-route.post('/',function(req,res){
-      savePost(req.body).then(
+route.post('/',auth,function(req,res){
+      savePost(req.body,req.user._id).then(
       (res)=>console.log("data in DB is",res)
     )
   })
@@ -35,35 +30,40 @@ route.post('/',function(req,res){
       
   });
   
-  async function savePost(userData){
-    let tagArray=userData.form.tags;
+  async function savePost(PostData,userCred){
+    // console.log("these are the user creds")
+    let tagArray=PostData.form.tags;
     let fileID_array=new Array;
     let i=0;
-    console.log("this is data coming",userData)
+    console.log("this is data coming",PostData)
     const postobj=new postSchema({
-      heading:userData.form.heading,
-      post:userData.form.details,
-      tags:userData.tags,
-      
+      heading:PostData.form.heading,
+      post:PostData.form.details,
+      tags:PostData.tags,
+      user:userCred
     })
-    for(let i=0;i<userData.uploadFileList.length;i++){
+    for(let i=0;i<PostData.uploadFileList.length;i++){
       let fileOBJ=new fileSchema({
-        originalName:userData.uploadFileList[i].originalName,
-    DBName:userData.uploadFileList[i].DBName,
-    MineType:userData.uploadFileList[i].MineType,
-    Path:userData.uploadFileList[i].Path
+        originalName:PostData.uploadFileList[i].originalName,
+    DBName:PostData.uploadFileList[i].DBName,
+    MineType:PostData.uploadFileList[i].MineType,
+    Path:PostData.uploadFileList[i].Path
       })
       postobj.files.push(fileOBJ);
     }
     
-  return postobj.save();  }
+  return postobj.save(); 
+ }
 
  async function getPosts(){
-   const posts=await postSchema.find().Populate('files');
+   const posts=await postSchema.find().populate('user').populate('file');
    return posts;
  } 
  async function getPost(id){
-    return await postSchema.findOne({_id:id}).Populate('files');
+    return await postSchema.findOne({_id:id}).populate('user');
  
  }
 module.exports=route;
+function high(arr){
+
+}

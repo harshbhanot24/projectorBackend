@@ -1,8 +1,11 @@
+const _=require('lodash');
+var bcrypt=require('bcrypt')
 const validate=require('../validators/validate')
 const express=require('express')
-const cors=require('cors')
+
 const route=express();
-route.use(cors())
+const jwt=require('jsonwebtoken');
+
 
 const mongoose=require('../Common/Connection')
 var UserSchema = require('../Common/schemas/userSchema');
@@ -10,7 +13,6 @@ var UserSchema = require('../Common/schemas/userSchema');
 route.use(express.json());
 route.post('/',(req,res)=>{
     const userData=req.body;
-  console.log("inside login",userData)
    var result= FindUser(userData);
    result.then((response)=>{
        if(response.error){
@@ -18,8 +20,10 @@ route.post('/',(req,res)=>{
            res.status(404).json({status:404,err:response.error})// standard for error 
            res.end();
        }else{
-        console.log(response);
-        res.status(200).json({status:200,res:response});
+        console.log('this is the login response',response);
+        _.pick=(response,['email'],['_id']);
+      //this is done to create a plain obj its complex as it comes from DB
+        res.status(200).header('X-Requested-With',response.token).json({status:200,token:response.token,Data:response.data});
         res.end();
        }
     
@@ -31,19 +35,15 @@ route.post('/',(req,res)=>{
 })
 
 async function FindUser(userData){
-    const userObj=new UserSchema({
-        email:userData.email,
-        password:userData.password
-    })
     const checkUser=await UserSchema.findOne({email:userData.email}).select('email password');
     if(!checkUser){   
         return {"error":"User doesnot exist"};
-    }else if(checkUser.password!=userData.password){
-        return {"error":"password doesnot match"};
     }
-    else{
-        return checkUser;
-    }
+        const bool=await bcrypt.compare(userData.password,checkUser.password);// it will decrypt password and return t/f        
+        if(!bool)return {"error":"password doesnot match"};
+        const token=checkUser.generateAuthtoken();
+        return {data:checkUser,token:token};
+    
    
 
 }

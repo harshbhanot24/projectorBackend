@@ -1,13 +1,13 @@
 //this is used to add a single file upload to the
 const express=require('express')
-const cors=require('cors')
+
 const route=express();
 route.use(express.json());
 var fileSchema = require('../Common/schemas/fileSchema');
 route.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
   res.setHeader('Access-Control-Allow-Methods', 'POST');
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,x-auth-token,content-type');
   res.setHeader('Access-Control-Allow-Credentials', true);
   next();
 });

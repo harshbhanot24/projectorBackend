@@ -39,7 +39,6 @@ route.get('/:id',(req,res)=>{
 //update basic user details
 route.put('/:id',(req,res)=>{
     let id=req.params.id;
-    console.log('hy put',id)
     if(mongoose.Types.ObjectId.isValid(id)){
       
         let user=UpdateBasicUser(id,req.body);
@@ -72,6 +71,7 @@ route.put('/college/:id',(req,res)=>{
     } 
 })
 async function UpdateBasicUser(id,user){
+    console.log('user coming from client is', user)
  const User=await UserSchema.findByIdAndUpdate(id,{$set:user}).then((res)=>{
     return res;
 });

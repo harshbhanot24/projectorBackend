@@ -1,13 +1,8 @@
 const validate=require('../validators/validate')
+var bcrypt=require('bcrypt')
 const express=require('express')
-const cors=require('cors')
+
 const route=express();
-route.use(cors())
-route.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
 const mongoose=require('../Common/Connection')
 var UserSchema = require('../Common/schemas/userSchema');
 route.use(express.json());
@@ -21,21 +16,24 @@ route.post('/',(req,res)=>{
            res.end();
        }else{
         console.log(response);
-        res.status(200).json(response);
+        res.status(200).json({status:200,data:response});
+
         res.end();
        }
     
-   }).catch(()=>{
+   }).catch((err)=>{
+       console.log(err)
     res.status(500).json({"error":"unexpected error occurred"});
    })
    
 })
 
 async function CreateUser(userData){
+const salt =await bcrypt.genSalt(10);
+const hashpassword=await bcrypt.hash(userData.passwords.password,salt)
     const userObj=new UserSchema({
         email:userData.email,
-        password:userData.passwords.password,
-        College:'jngec'
+        password:hashpassword
     })
     const checkUser=await UserSchema.findOne({email:userData.email}).select('_id');
     if(!checkUser){
