@@ -14,7 +14,7 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
   });
- // app.use(express.static(__dirname+'/dist/projectAppLogin'))
+ app.use(express.static(__dirname+'/dist/start'))
 
 
  //routes
