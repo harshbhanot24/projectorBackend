@@ -24,7 +24,7 @@ const userSchema=new mongoose.Schema({
 //creating a user class
 //now we ll create a method to create JWT token here.
 userSchema.methods.generateAuthtoken=function(){
-    const token=jwt.sign({_id:this.id,email:this.email,role:this.role},'mykey');
+    const token=jwt.sign({_id:this.id,email:this.email,role:this.role,userNames:this.userName},'mykey');
     return token;
 }
 module.exports=mongoose.model('User',userSchema);

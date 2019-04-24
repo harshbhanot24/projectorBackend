@@ -2,12 +2,7 @@ const _=require('lodash');
 var bcrypt=require('bcrypt')
 const validate=require('../validators/validate')
 const express=require('express')
-
 const route=express();
-const jwt=require('jsonwebtoken');
-
-
-const mongoose=require('../Common/Connection')
 var UserSchema = require('../Common/schemas/userSchema');
 
 route.use(express.json());

@@ -3,11 +3,7 @@ const express=require('express')
 const cors=require('cors')
 const route=express();
 route.use(cors())
-route.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
+
 const mongoose=require('../Common/Connection')
 var UserSchema = require('../Common/schemas/userSchema');
 route.use(express.json());
@@ -39,26 +35,19 @@ route.get('/:id',(req,res)=>{
 //update basic user details
 route.put('/:id',(req,res)=>{
     let id=req.params.id;
+   
     if(mongoose.Types.ObjectId.isValid(id)){
-      
-        let user=UpdateBasicUser(id,req.body);
-        user.then((response)=>{
-            if(response==null){
-                res.status(404).json({'status':404,'err':'User Doesnot exists'})
-                res.end();
-            }else{
-             console.log(response);
-             res.status(200).json(response);
-             res.end();
-            }
-         
-        }).catch(()=>{
-         res.status(500).json({"error":"unexpected error occurred"});
+        console.log(req.body)
+        let users=UpdateBasicUser(id,req.body);
+        users.then((data)=>{
+            res.json({status:200,data:data,from:'basic form  update put'})
+        }).catch((err)=>{
+            res.json({status:500,err:'Unexpected Error occured'})
         })
-    }else{
-        res.status(404).json({status:'404','err':'Not a Valid UserID'})
-
     } 
+    else{
+        res.json({status:404,err:'User Doesnot exist to update'})
+    }
 })
 // update college details
 route.put('/college/:id',(req,res)=>{
@@ -66,15 +55,26 @@ route.put('/college/:id',(req,res)=>{
     console.log('hy put',id)
     if(mongoose.Types.ObjectId.isValid(id)){
         console.log(req.body)
-        let user=UpdateBasicUser(id,req.body);
-
+        let users=UpdateBasicUser(id,req.body);
+        users.then((data)=>{
+            res.json({status:200,data:data,from:'college update put'})
+        }).catch((err)=>{
+            res.json({status:500,err:'Unexpected Error occured'})
+        })
     } 
+    else{
+        res.json({status:404,err:'User Doesnot exist to update'})
+    }
 })
 async function UpdateBasicUser(id,user){
     console.log('user coming from client is', user)
- const User=await UserSchema.findByIdAndUpdate(id,{$set:user}).then((res)=>{
-    return res;
-});
+   return await UserSchema.findByIdAndUpdate(id,{$set:user})
+//    .then((res)=>{
+//     return res;
+// }).catch((err)=>{
+//     console.log('this is DB error')
+//     return err;
+// });
 }
 async function GetUser(id){
     const User=await UserSchema.findById(id);

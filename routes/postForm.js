@@ -9,7 +9,7 @@ route.use(express.json());
   var fileSchema=require('../Common/schemas/fileSchema')
 route.post('/',auth,function(req,res){
       savePost(req.body,req.user._id).then(
-      (res)=>console.log("data in DB is",res)
+      (data)=>res.status(200).json({status:200,id:res._id})
     )
   })
  

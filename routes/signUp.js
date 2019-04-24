@@ -23,7 +23,7 @@ route.post('/',(req,res)=>{
     
    }).catch((err)=>{
        console.log(err)
-    res.status(500).json({"error":"unexpected error occurred"});
+    res.status(500).json({"err":"unexpected error occurred"});
    })
    
 })
