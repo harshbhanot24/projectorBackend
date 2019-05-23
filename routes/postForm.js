@@ -1,10 +1,8 @@
 const express=require('express')
 const auth=require('../auth/auth')
-
 ObjectId = require('mongodb').ObjectID;
 const route=express();
 route.use(express.json());
-
   var postSchema =require('../Common/schemas/postSchema'); 
   var fileSchema=require('../Common/schemas/fileSchema')
 route.post('/',auth,function(req,res){
@@ -12,7 +10,6 @@ route.post('/',auth,function(req,res){
       (data)=>res.status(200).json({status:200,id:res._id})
     )
   })
- 
   route.get('/',function(req,res){
     const posts= getPosts().then(
       (result)=>res.status(200).json({status:200,Data:result})
